@@ -1,5 +1,6 @@
 #include <vector>
 #include <queue>
+#include <limits.h>
 #include "tree_node.h"
 #include "build_tree.h"
 #include "print_vector.h"
@@ -53,6 +54,32 @@ public:
         std::reverse(ret.begin(), ret.end());
         return ret;
     }
+
+    // https://leetcode.cn/problems/hPov7L/
+    // 剑指 Offer II 044. 二叉树每层的最大值
+    vector<int> largestValuesInEachLevel(TreeNode* root) {
+        if (!root)
+            return {};
+        vector<int> res;
+        queue<TreeNode*> qt;
+        qt.push(root);
+        while (!qt.empty()) {
+            int length = qt.size();
+            int max_value = INT_MIN;
+            while (length > 0) {
+                length--;
+                TreeNode* node = qt.front();
+                qt.pop();
+                max_value = std::max(max_value, node->val);
+                if (node->left)
+                    qt.push(node->left);
+                if (node->right)
+                    qt.push(node->right);
+            }
+            res.push_back(max_value);
+        }
+        return res;
+    }
 };
 
 int main() {
@@ -62,9 +89,12 @@ int main() {
     print(res);
 
     std::cout << std::endl;
-
     vector<vector<int>> bottom = t.levelOrderBottom(bt);
     print(bottom);
+
+    std::cout << std::endl;
+    vector<int> largest = t.largestValuesInEachLevel(bt);
+    print(largest);
 
     return 0;
 }
